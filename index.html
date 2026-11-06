@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#6c4cf1">
+<title>Brain Master — অফলাইন বুদ্ধির খেলা</title>
+<style>
+:root{--ink:#202044;--muted:#70708c;--card:#fff;--bg:#f4f2ff;--purple:#6c4cf1;--pink:#ff5fa2;--cyan:#35c6d5;--yellow:#ffc857;--green:#29b879;--shadow:0 12px 35px #32236b16}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,"Noto Sans Bengali",sans-serif;background:radial-gradient(circle at 10% 0,#e7ddff 0,transparent 30%),radial-gradient(circle at 95% 10%,#ffe0ed 0,transparent 25%),var(--bg);color:var(--ink);min-height:100vh}
+header{padding:22px 16px 12px;text-align:center}.logo{display:inline-grid;place-items:center;width:58px;height:58px;border-radius:19px;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;font-size:30px;box-shadow:0 9px 20px #6c4cf14a}
+h1{font-size:clamp(27px,6vw,39px);margin:9px 0 3px;letter-spacing:-1px}.tag{color:var(--muted);margin:0}
+.wrap{max-width:900px;margin:auto;padding:12px 16px 40px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.stat{background:#ffffffd9;border:1px solid #fff;border-radius:17px;padding:12px;text-align:center;box-shadow:var(--shadow)}.stat b{display:block;font-size:22px;color:var(--purple)}.stat span{font-size:12px;color:var(--muted)}
+.section-title{font-size:19px;margin:22px 2px 12px}.games{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.game{border:0;text-align:left;border-radius:20px;padding:17px;background:var(--card);box-shadow:var(--shadow);color:var(--ink);cursor:pointer;min-height:145px;transition:.15s}.game:active{transform:scale(.98)}.game .emoji{font-size:31px}.game h3{margin:8px 0 3px;font-size:17px}.game p{margin:0;color:var(--muted);font-size:13px}.game:nth-child(1){border-top:5px solid var(--yellow)}.game:nth-child(2){border-top:5px solid var(--pink)}.game:nth-child(3){border-top:5px solid var(--cyan)}.game:nth-child(4){border-top:5px solid var(--green)}.game:nth-child(5){border-top:5px solid var(--purple)}
+.panel{display:none;background:#fff;border-radius:23px;padding:19px;box-shadow:var(--shadow);margin-top:18px}.panel.active{display:block}.topline{display:flex;align-items:center;justify-content:space-between;gap:10px}.back{border:0;background:#f0edff;color:var(--purple);border-radius:12px;padding:9px 13px;font-weight:700;cursor:pointer}.pill{background:#f2efff;color:var(--purple);padding:7px 11px;border-radius:99px;font-size:12px;font-weight:700}.question{font-size:clamp(21px,5vw,29px);font-weight:800;text-align:center;margin:28px 0 20px;line-height:1.5}.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.answer,.action{border:2px solid #eeeaff;background:#faf9ff;border-radius:14px;padding:13px;font-size:17px;font-weight:700;color:var(--ink);cursor:pointer}.answer:hover,.action:hover{border-color:var(--purple)}.answer:disabled{cursor:default;opacity:.8}.answer.correct{background:#e7fff4;border-color:var(--green)}.answer.wrong{background:#fff0f4;border-color:var(--pink)}
+.feedback{text-align:center;min-height:32px;font-weight:700;margin:15px 0 4px}.next{display:block;margin:12px auto 0;background:linear-gradient(100deg,var(--purple),#9b61f6);color:#fff;border:0;border-radius:14px;padding:12px 24px;font-size:16px;font-weight:800;cursor:pointer}.next:disabled{opacity:.45;cursor:not-allowed}.progress{height:8px;background:#eeeaff;border-radius:9px;overflow:hidden;margin-top:15px}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--purple));width:0}
+.memory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;max-width:440px;margin:auto}.memory-card{aspect-ratio:1;border:0;border-radius:14px;background:linear-gradient(135deg,#7555f4,#a77af8);color:#fff;font-size:clamp(23px,6vw,34px);cursor:pointer}.memory-card.open,.memory-card.done{background:#f2efff;color:var(--ink)}.memory-card.done{background:#e4fff2}
+.number-display{font-size:32px;letter-spacing:8px;background:#f5f2ff;border-radius:16px;padding:22px;text-align:center;font-weight:900}.field{width:100%;padding:14px;border:2px solid #e8e3ff;border-radius:13px;font-size:18px;text-align:center;margin:10px 0}.small{color:var(--muted);font-size:13px;text-align:center}.footer{text-align:center;color:var(--muted);font-size:12px;margin:25px 0 5px}
+@media(min-width:650px){.games{grid-template-columns:repeat(3,1fr)}.game{min-height:160px}.panel{padding:25px}.stats{max-width:550px;margin:18px auto}.section-title{text-align:center}}
+</style>
+</head>
+<body>
+<header><div class="logo">🧠</div><h1>Brain Master</h1><p class="tag">খেলতে খেলতে বুদ্ধির চর্চা — সম্পূর্ণ অফলাইন!</p><p class="tag" style="margin-top:6px;color:#29a36a;font-weight:700">🌍 সবার জন্য উন্মুক্ত · কোনো লগইন বা পাসওয়ার্ড লাগবে না</p></header>
+<main class="wrap">
+<div class="stats">
+ <div class="stat"><b id="totalScore">0</b><span>⭐ মোট পয়েন্ট</span></div>
+ <div class="stat"><b id="bestScore">0</b><span>🏆 সেরা স্কোর</span></div>
+ <div class="stat"><b id="played">0</b><span>🎮 খেলা হয়েছে</span></div>
+</div>
+<section id="home">
+<h2 class="section-title">আজ কোন খেলাটি খেলবে?</h2>
+<div class="games">
+<button class="game" onclick="startQuiz('math')"><div class="emoji">🔢</div><h3>গণিতের ধাঁধা</h3><p>হিসাব করো, উত্তর খুঁজে বের করো</p></button>
+<button class="game" onclick="startQuiz('logic')"><div class="emoji">🧩</div><h3>বুদ্ধির পরীক্ষা</h3><p>যুক্তি দিয়ে সমাধান করো</p></button>
+<button class="game" onclick="startMemory()"><div class="emoji">🧠</div><h3>স্মৃতিশক্তির খেলা</h3><p>একই ছবি জোড়া মেলাও</p></button>
+<button class="game" onclick="startFind()"><div class="emoji">🔍</div><h3>সংখ্যা খোঁজো</h3><p>দ্রুত সঠিক সংখ্যা বেছে নাও</p></button>
+<button class="game" onclick="startQuiz('mixed')"><div class="emoji">🎯</div><h3>মিশ্র চ্যালেঞ্জ</h3><p>সব ধরনের প্রশ্ন একসঙ্গে</p></button>
+</div>
+</section>
+<section id="panel" class="panel">
+<div class="topline"><button class="back" onclick="goHome()">← হোম</button><span class="pill" id="modeLabel">চ্যালেঞ্জ</span><span class="pill" id="roundLabel">১ / ১০</span></div>
+<div class="progress"><i id="progressBar"></i></div>
+<div id="playArea"></div>
+<div id="feedback" class="feedback" aria-live="polite"></div>
+<button id="nextBtn" class="next" onclick="nextQuestion()" disabled>পরের প্রশ্ন →</button>
+</section>
+<div class="footer">Brain Master · কোনো বিজ্ঞাপন নেই · কোনো কেনাকাটা নেই · ইন্টারনেট লাগে না</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+let total=Number(localStorage.bmTotal||0),best=Number(localStorage.bmBest||0),played=Number(localStorage.bmPlayed||0);
+function stats(){ $('totalScore').textContent=total;$('bestScore').textContent=best;$('played').textContent=played }
+stats();
+const math=[
+ ["১২ + ৮ × ২ = কত?",["২৮","৪০","৩২","২৪"],0],
+ ["এক ডজনের অর্ধেক কতটি?",["৪","৬","৮","১০"],1],
+ ["৯ × ৭ = কত?",["৫৬","৬২","৬৩","৭২"],2],
+ ["১০০-এর ২৫% কত?",["১৫","২০","২৫","৩০"],2],
+ ["৩, ৬, ১২, ২৪, ... পরের সংখ্যা?",["৩০","৩৬","৪৮","৪২"],2],
+ ["একটি বর্গের বাহু ৫ সেমি। পরিসীমা কত?",["১০ সেমি","১৫ সেমি","২০ সেমি","২৫ সেমি"],2],
+ ["৮১ ÷ ৯ = কত?",["৭","৮","৯","১০"],2],
+ ["১৫ + ১৭ = কত?",["৩০","৩১","৩২","৩৩"],2],
+ ["সবচেয়ে ছোট মৌলিক সংখ্যা কোনটি?",["০","১","২","৩"],2],
+ ["২-এর ঘনফল কত?",["৪","৬","৮","১৬"],2]
+];
+const logic=[
+ ["যে জিনিস যত শুকায়, তত ভিজে—সেটি কী?",["তোয়ালে","আগুন","বই","বাতাস"],0],
+ ["সপ্তাহে কয় দিন?",["৫","৬","৭","৮"],2],
+ ["একটি ঘরে ৪টি কোণ। প্রতিটি কোণে ১টি বিড়াল। মোট বিড়াল?",["৪","৮","১২","১৬"],0],
+ ["দিনের পর রাত আসে। রাতের পর কী আসে?",["সকাল","বিকেল","আবার রাত","দুপুর"],0],
+ ["কোনটি আলাদা?",["আম","কলা","গাজর","জাম"],2],
+ ["১, ১, ২, ৩, ৫, ... পরের সংখ্যা?",["৬","৭","৮","৯"],2],
+ ["তোমার বাবার ছেলে, কিন্তু তোমার ভাই নয়—কে?",["বন্ধু","তুমি","চাচা","দাদা"],1],
+ ["কোন মাসে ২৮ দিন আছে?",["শুধু ফেব্রুয়ারি","সব মাসে","জানুয়ারি","এপ্রিল"],1],
+ ["একটি মোমবাতি জ্বলছে। বাতাসে কোন দিকে ধোঁয়া যাবে?",["উপরে","নিচে","ডানে","বামে"],0],
+ ["৫টি মেশিন ৫ মিনিটে ৫টি খেলনা বানায়। ১টি মেশিন ১টি খেলনা বানাতে কত মিনিট?",["১","৫","১০","২৫"],1]
+];
+let questions=[],index=0,roundScore=0,mode='',memoryFirst=null,memoryLock=false,matches=0,findAnswer=0;
+function openPanel(label){$('home').style.display='none';$('panel').classList.add('active');$('modeLabel').textContent=label;$('feedback').textContent='';$('nextBtn').disabled=true}
+function goHome(){$('panel').classList.remove('active');$('home').style.display='block';$('playArea').innerHTML='';$('feedback').textContent='';stats()}
+function startQuiz(type){
+ mode='quiz';index=0;roundScore=0;
+ let pool=type==='math'?math:type==='logic'?logic:[...math,...logic];
+ questions=pool.slice().sort(()=>Math.random()-.5).slice(0,10);
+ openPanel(type==='math'?'গণিতের ধাঁধা':type==='logic'?'বুদ্ধির পরীক্ষা':'মিশ্র চ্যালেঞ্জ');renderQuiz();
+}
+function renderQuiz(){
+ const q=questions[index];$('roundLabel').textContent=(index+1)+' / '+questions.length;$('progressBar').style.width=(index/questions.length*100)+'%';
+ $('playArea').innerHTML='<div class="question">'+q[0]+'</div><div class="answers">'+q[1].map((a,i)=>'<button class="answer" onclick="choose('+i+')">'+a+'</button>').join('')+'</div>';
+ $('feedback').textContent='';$('nextBtn').disabled=true;$('nextBtn').textContent=index===questions.length-1?'ফলাফল দেখো':'পরের প্রশ্ন →';
+}
+function choose(n){
+ const q=questions[index],buttons=[...document.querySelectorAll('.answer')];buttons.forEach(b=>b.disabled=true);
+ if(n===q[2]){buttons[n].classList.add('correct');$('feedback').textContent='🎉 সঠিক উত্তর! +১০ পয়েন্ট';roundScore+=10}
+ else{buttons[n].classList.add('wrong');buttons[q[2]].classList.add('correct');$('feedback').textContent='চেষ্টা ভালো হয়েছে! সঠিক উত্তর: '+q[1][q[2]]}
+ $('nextBtn').disabled=false;
+}
+function nextQuestion(){if(index<questions.length-1){index++;renderQuiz()}else finish(roundScore)}
+function finish(points){total+=points;best=Math.max(best,points);played++;localStorage.bmTotal=total;localStorage.bmBest=best;localStorage.bmPlayed=played;stats();$('progressBar').style.width='100%';$('playArea').innerHTML='<div class="question">🏆 দারুণ খেলেছ!<br>এই রাউন্ডে পেয়েছ '+points+' পয়েন্ট</div><p class="small">আরও ভালো স্কোরের জন্য আবার চেষ্টা করো।</p>';$('feedback').textContent='তোমার মোট পয়েন্ট: '+total;$('nextBtn').textContent='হোমে ফিরে যাও';$('nextBtn').disabled=false;$('nextBtn').onclick=()=>{ $('nextBtn').onclick=nextQuestion;goHome() }}
+function startMemory(){
+ mode='memory';matches=0;memoryFirst=null;memoryLock=false;openPanel('স্মৃতিশক্তির খেলা');$('roundLabel').textContent='৬ জোড়া';$('progressBar').style.width='0%';
+ let vals=['🍎','🚀','🐱','⚽','🌈','🎸'];let deck=[...vals,...vals].sort(()=>Math.random()-.5);
+ $('playArea').innerHTML='<div class="question">একই ছবি খুঁজে জোড়া মেলাও</div><div class="memory-grid">'+deck.map((v,i)=>'<button class="memory-card" data-v="'+v+'" onclick="flip(this)">'+(i+1)+'</button>').join('')+'</div><p class="small">সব ৬টি জোড়া মিলিয়ে ফেলো।</p>';
+ $('feedback').textContent='মিলেছে: ০ / ৬';$('nextBtn').textContent='নতুন করে খেলো';$('nextBtn').disabled=false;$('nextBtn').onclick=startMemory;
+}
+function flip(card){if(memoryLock||card.classList.contains('open')||card.classList.contains('done'))return;card.classList.add('open');card.textContent=card.dataset.v;
+ if(!memoryFirst){memoryFirst=card;return}
+ if(memoryFirst.dataset.v===card.dataset.v){memoryFirst.classList.add('done');card.classList.add('done');memoryFirst=null;matches++;$('feedback').textContent='মিলেছে: '+matches+' / ৬';$('progressBar').style.width=(matches/6*100)+'%';if(matches===6){total+=60;best=Math.max(best,60);played++;localStorage.bmTotal=total;localStorage.bmBest=best;localStorage.bmPlayed=played;stats();$('feedback').textContent='🎉 সব জোড়া মিলেছে! +৬০ পয়েন্ট';$('nextBtn').textContent='আবার খেলো'}}
+ else{memoryLock=true;let first=memoryFirst;setTimeout(()=>{first.classList.remove('open');card.classList.remove('open');first.textContent='?';card.textContent='?';memoryFirst=null;memoryLock=false},750)}
+}
+function startFind(){mode='find';openPanel('সংখ্যা খোঁজো');let nums=Array.from({length:16},()=>Math.floor(Math.random()*50)+1);findAnswer=nums[Math.floor(Math.random()*nums.length)];$('roundLabel').textContent='১ / ১';$('progressBar').style.width='0%';$('playArea').innerHTML='<div class="question">এই সংখ্যাটি খুঁজে বের করো: <span style="color:#6c4cf1">'+findAnswer+'</span></div><div class="answers">'+nums.map(n=>'<button class="answer" onclick="findPick('+n+',this)">'+n+'</button>').join('')+'</div>';$('feedback').textContent='সঠিক সংখ্যাটিতে চাপ দাও।';$('nextBtn').textContent='আবার খেলো';$('nextBtn').disabled=false;$('nextBtn').onclick=startFind}
+function findPick(n,btn){document.querySelectorAll('.answer').forEach(b=>b.disabled=true);if(n===findAnswer){btn.classList.add('correct');$('feedback').textContent='🎉 ঠিক ধরেছ! +১০ পয়েন্ট';total+=10;best=Math.max(best,10)}else{$('feedback').textContent='এবার মেলেনি! পরেরবার চেষ্টা করো।';btn.classList.add('wrong')}played++;localStorage.bmTotal=total;localStorage.bmBest=best;localStorage.bmPlayed=played;stats();$('progressBar').style.width='100%'}
+</script>
+</body>
+</html>
